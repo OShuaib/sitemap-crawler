@@ -86,6 +86,39 @@ func extractSiteMapURLs(startURL)[]string{
     
 }
 
+func makeRequest(url string)(*http.Response, error){
+    client := http.Client{
+        Timeout : 10*time.Second,
+    }
+    req, err := http.NewRequest("GET", url, nil)
+    req.Header.Set("User-Agent", randomUserAgent())
+    if err!= nil {
+        return nil, err 
+    }
+
+    res, err := client.Do(req)
+    if err != nil {
+        return nil, err
+    }
+    return res, nil 
+}
+
+func scrapeURLs(){
+
+}
+
+func scrapePage(url string)(SeoData, error){
+    res, err := crawlPage(url)
+    if err != nil {
+        return Seodata{}, err
+    }
+    data, err := parser.getSEOData(res)
+    if err != nil {
+        return SeoData{}, err
+    }
+    return data, nil 
+}
+
 
 
 
