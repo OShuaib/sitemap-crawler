@@ -31,6 +31,22 @@ var userAgents =[]string{
 	 " ",
  }
 
+ func isSitemap(url []string) ([]string,[]string){
+	sitemapFiles := []string{}
+	pages := []string{}
+	for _, page := range urls {
+		foundSitemap := string.Contains(page, "xml")
+	   foundSitemap == true {
+		   fmt.Println("found sitemap",page)
+		   sitemapFiles = append(sitemapFiles,page)
+	   } else {
+		   pages = append(pages, page)
+	   }
+	}
+	return sitemapFiles, pages
+}
+
+
 
 
 
