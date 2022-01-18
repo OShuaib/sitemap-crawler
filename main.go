@@ -46,6 +46,45 @@ var userAgents =[]string{
 	return sitemapFiles, pages
 }
 
+func randomUserAgent() string {
+    rand.Seed(time.Now().Unix())
+    random := rand.int() % len(userAgents)
+    return userAgents[random]
+}
+
+func extractSiteMapURLs(startURL)[]string{
+    worklist := make(chan []string)
+    toCrawl := []string{}
+    var n int 
+    n++ 
+    go func{worklist <- []string{startURL}}()
+
+    for ; n>0; n-- { 
+
+    list:= <- worklist
+    for _, link := range list{
+        go func(link string){
+            response, err := makeRequest(link)
+            if err != nil {
+                log.Printf("Error retrieving URL: %s", link)
+            }
+            url, _ := extractUrls(response)
+            if err != nil {
+                log.Printf("error extracting document from respons, URL:%s", link)
+            }
+            sitemapFiles, pages := isSitemap(urls)
+            if sitemapFiles != nil {
+                worklist <- sitemapFiles
+            }
+            for _, page := range pages {
+                toCrawl = append(toCrawl,page)
+            }
+        }(link)
+    }
+    return toCrawl 
+}
+    
+}
 
 
 
